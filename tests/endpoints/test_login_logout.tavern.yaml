@@ -1,0 +1,23 @@
+---
+test_name: Test login then logout
+
+stages:
+  - name: Log in
+    request:
+      url: "{host:s}/api/v3/auth/login/"
+      method: POST
+      headers:
+        accepts: application/json
+        content-type: application/json
+      json:
+        username: "{joeseed_username}"
+        password: "{joeseed_password}"
+
+    response:
+      status_code: 200
+      body:
+        token: !anystr
+        token_type: sliding
+      save:
+        body:
+          auth_token: token

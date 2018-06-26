@@ -1,0 +1,121 @@
+---
+
+stages:
+    - precheck
+    - tests
+    - deploy
+
+
+#############################################################################
+# Run pyflakes
+
+pep8 django app:
+    image: michaelboulton/python-package-build:3.5-slim-jessie
+    stage: precheck
+
+    before_script:
+        - pip install pylama
+    script:
+        - pylama -o pytest.ini -l pep8 zconnect
+
+    allow_failure: true
+
+Pyflakes tests:
+    image: michaelboulton/python-package-build:3.5-slim-jessie
+    stage: precheck
+
+    before_script:
+        - pip install pylama
+    script:
+        - pylama -o pytest.ini -l pyflakes tests
+
+    allow_failure: true
+
+Check sort order of django app:
+    image: michaelboulton/python-package-build:3.5-slim-jessie
+    stage: precheck
+
+    before_script:
+        - pip install isort
+    script:
+        - isort -rc --check-only zconnect --diff
+
+    allow_failure: true
+
+Pyflakes django app:
+    image: michaelboulton/python-package-build:3.5-slim-jessie
+    stage: precheck
+
+    before_script:
+        - pip install pylama
+    script:
+        - pylama -o pytest.ini -l pyflakes zconnect
+
+
+#############################################################################
+# Tests + pylint
+
+Lint django app:
+    image: michaelboulton/python-package-build:3.5-slim-jessie
+    stage: tests
+    tags:
+        - kwak
+
+    before_script:
+        - pip3 install tox
+    script:
+        - tox -e pylint
+
+Test django app:
+    image: michaelboulton/python-package-build:3.5-slim-jessie
+    stage: tests
+    tags:
+        - kwak
+
+    services:
+        - redis
+    variables:
+        REDIS_HOST: redis
+
+    before_script:
+        - pip3 install tox
+    script:
+        - tox -e py35-django20
+
+#############################################################################
+# Deploy
+
+deploy-docs:
+
+  # This is for deploying the API specs using redoc as a way to view it.
+  # NOTES:
+  # 1. You must have a file named openapi.yaml. Nothing else will be deployed
+  # 2. Your project will be available at https://internal.zoetrope.io/<project_name>
+
+  stage: deploy
+  only:
+    - master
+
+  image: python:3.5-slim-jessie
+  # This requires a debian type base image
+  before_script:
+    - apt-get update -y
+    - apt-get install rsync build-essential -y
+    - pip3 install --user --upgrade pip setuptools wheel
+    - 'which ssh-agent || ( apt-get install openssh-client -y )'
+    - eval $(ssh-agent -s)
+    - echo "$DEPLOY_SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+    - ssh-add -l
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+
+  script:
+    - ls
+    - cd doc
+    - pip3 install Sphinx sphinx_rtd_theme recommonmark
+    - pip3 install -r requirements.txt
+    - sphinx-apidoc -o source/ ../zconnect -f
+    - make html
+    # Normally we'd deploy to .../docs/$CI_PROJECT_NAMESPACE-$CI_PROJECT_NAME/
+    # but that becomes /zconnect-zconnect-django, so just use the project name
+    - rsync --delete -arvce "ssh -o StrictHostKeyChecking=no -p2223" build/html/ docsuser@staging.zoetrope.io:/home/docs/$CI_PROJECT_NAME/

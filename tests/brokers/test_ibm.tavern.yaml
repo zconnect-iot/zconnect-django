@@ -1,0 +1,27 @@
+---
+
+test_name: Test mqtt message response
+
+paho-mqtt: &mqtt_spec
+  tls:
+    enable: false
+  connect:
+    host: vernemq
+    port: 1883
+    timeout: 3
+  client:
+    # transport: websockets
+    client_id: tavern-tester
+  auth:
+    username: overlock-worker
+    password: "123456789"
+
+stages:
+  - name: step 1 - ping/pong
+    mqtt_publish:
+      topic: /ping
+      payload: ping
+    mqtt_response:
+      topic: /pong
+      payload: pong
+      timeout: 5

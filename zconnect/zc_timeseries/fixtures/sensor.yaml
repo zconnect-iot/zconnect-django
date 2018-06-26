@@ -1,0 +1,39 @@
+---
+
+# "SensorType",
+# "DeviceSensor",
+# "TimeSeriesData",
+
+- model: zconnect.timeseries.SensorType
+  pk: 1
+  fields:
+    # zconnect/fixtures/devices.yaml
+    product: 1
+    sensor_name: Power usage sensor
+    unit: watts
+    graph_type: ts_graph
+
+- model: zconnect.timeseries.SensorType
+  pk: 2
+  fields:
+    # zconnect/fixtures/devices.yaml
+    product: 1
+    sensor_name: Door stuck sensor
+    unit: incidents
+    graph_type: ts_graph
+
+- model: zconnect.timeseries.devicesensor
+  pk: 1
+  fields:
+    # zconnect/fixtures/devices.yaml
+    device: 1
+    # above
+    sensor_type: 1
+
+- model: zconnect.timeseries.devicesensor
+  pk: 2
+  fields:
+    # zconnect/fixtures/devices.yaml
+    device: 1
+    # above
+    sensor_type: 2

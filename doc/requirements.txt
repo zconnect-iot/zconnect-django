@@ -1,0 +1,6 @@
+sphinx_rtd_theme
+sphinx
+recommonmark
+drf-extensions
+ibmiotf
+-e ..[tests]
