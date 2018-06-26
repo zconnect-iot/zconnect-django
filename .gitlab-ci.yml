@@ -59,7 +59,7 @@ Lint django app:
     image: michaelboulton/python-package-build:3.5-slim-jessie
     stage: tests
     tags:
-        - kwak
+        - docker
 
     before_script:
         - pip3 install tox
@@ -70,7 +70,7 @@ Test django app:
     image: michaelboulton/python-package-build:3.5-slim-jessie
     stage: tests
     tags:
-        - kwak
+        - docker
 
     services:
         - redis
