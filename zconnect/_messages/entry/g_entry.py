@@ -3,13 +3,13 @@
 This should not be imported other than to start the listener, because it monkey
 patches gevent and starts the event loop etc.
 """
-from gevent import monkey
+# pylint: disable=wrong-import-position,wrong-import-order
+from gevent import monkey # pylint: disable=import-error
 monkey.patch_all()
 
-from psycogreen.gevent import patch_psycopg
+from psycogreen.gevent import patch_psycopg # pylint: disable=import-error
 patch_psycopg()
 
-# pylint: disable=wrong-import-position
 import django
 from ..listener import get_listener
 from zconnect.util.profiling.stats_server import get_flask_server
