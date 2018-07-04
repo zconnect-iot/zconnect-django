@@ -31,5 +31,9 @@ if __name__ == "__main__":
         tests_require=TESTS_REQUIRE,
         extras_require={
             "tests": TESTS_REQUIRE,
+            "sampling": [
+                "gevent==1.2.2",
+                "psycogreen",
+            ]
         }
     )
