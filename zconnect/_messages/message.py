@@ -58,7 +58,8 @@ class Message:
         self.category = category
         self.body = body
         self.device = device
-        self.timestamp = timestamp or datetime.datetime.now()
+        ts = timestamp or datetime.datetime.now()
+        self.timestamp = ts.replace(tzinfo=None)
 
     def __repr__(self):
         return "Message(\

@@ -171,7 +171,6 @@ def fix_timeseries_user(db):
     norm.user_permissions.add(perm)
     return norm
 
-
 @pytest.fixture(name="timeseries_user_login")
 def fix_timeseries_user_login(timeseries_user, testclient):
     """

@@ -6,6 +6,9 @@ patches gevent and starts the event loop etc.
 from gevent import monkey
 monkey.patch_all()
 
+from psycogreen.gevent import patch_psycopg
+patch_psycopg()
+
 # pylint: disable=wrong-import-position
 import django
 from .listener import get_listener

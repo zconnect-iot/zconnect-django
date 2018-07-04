@@ -1,6 +1,6 @@
 import logging
-
-import gevent
+import time
+import threading
 
 from zconnect import zsettings
 from zconnect.registry import get_message_handlers, load_from_file
@@ -86,7 +86,7 @@ class Listener:
         self.broker_interface.subscribe_to_events(self._message_callback)
 
 
-class MessageListenerGreenlet(gevent.Greenlet):
+class MessageListener(threading.Thread):
     """ Handles all triggered events
 
     Loads:
@@ -111,7 +111,7 @@ class MessageListenerGreenlet(gevent.Greenlet):
 
         super().__init__()
 
-    def _run(self): # pylint: disable=method-hidden
+    def run(self): # pylint: disable=method-hidden
         logger.info("Starting message listener")
 
         self.client.subscribe_to_events()
@@ -120,12 +120,12 @@ class MessageListenerGreenlet(gevent.Greenlet):
             # The watson client just starts a paho thread in the background
             # which waits for messages - we just sleep here and let that thread
             # do it's thing
-            gevent.sleep(83)
+            time.sleep(83)
 
 
 def get_listener():
-    """ Start the listener in a gevent loop
+    """ Start the listener in a separate thread
     """
-    w = MessageListenerGreenlet()
+    w = MessageListener()
 
     return w

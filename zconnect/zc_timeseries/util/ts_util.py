@@ -35,8 +35,7 @@ def insert_timeseries_data(message, device):
 
     for sensor in device.sensors.all():
         sensor_name = sensor.sensor_type.sensor_name
-
-        if message.body.get(sensor.sensor_type.sensor_name) is not None:
+        if message.body.get(sensor_name) is not None:
             new_datum = TimeSeriesData(
                 ts=message.timestamp,
                 sensor=sensor,

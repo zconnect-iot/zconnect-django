@@ -50,7 +50,7 @@ def get_all_related_orgs(orgs):
     parental_orgs = {}
     for org in orgs:
         parent_depth = 1
-        while org.parent:
+        while hasattr(org, 'parent') and org.parent:
             if parent_depth not in parental_orgs:
                 parental_orgs[parent_depth] = []
             parental_orgs[parent_depth].append(org.parent)

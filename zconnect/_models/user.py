@@ -1,5 +1,6 @@
 import logging
 
+from django.db import transaction
 from django.contrib.auth.models import AbstractUser
 from organizations.models import OrganizationUser
 from phonenumber_field.modelfields import PhoneNumberField
@@ -42,10 +43,12 @@ class User(ModelBase, AbstractUser):
             django.db.IntegrityError: if the user is already in that org
         """
 
+
         membership = OrganizationUser(
             user=self,
             organization=org,
         )
-        membership.save()
+        with transaction.atomic():
+            membership.save()
 
         return membership

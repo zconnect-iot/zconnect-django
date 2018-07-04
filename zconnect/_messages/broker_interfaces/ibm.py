@@ -26,7 +26,7 @@ class IBMInterface(Client):
 
         self.client.on_message = self.onUnsupportedMessage
 
-        for i in range(10):
+        for i in range(20):
             try:
                 self.connect()
             except:  # pylint: disable=broad-except,bare-except
