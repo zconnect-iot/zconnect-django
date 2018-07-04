@@ -11,7 +11,7 @@ patch_psycopg()
 
 # pylint: disable=wrong-import-position
 import django
-from .listener import get_listener
+from ..listener import get_listener
 from zconnect.util.profiling.stats_server import get_flask_server
 
 django.setup(set_prefix=False)
