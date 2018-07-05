@@ -472,7 +472,7 @@ class AbstractDevice(EventDefinitionMixin, ModelBase):
         """ This property can be subclassed in projects to define which organizations
         are to be used for notifying actions on this organization.
         """
-        return self.orgs
+        return self.orgs.all()
 
     def get_latest_state(self):
         """Get latest DeviceState
