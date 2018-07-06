@@ -7,7 +7,7 @@ from .cache import (
 logger = logging.getLogger(__name__)
 
 
-def _unwrap(_cache, *args, is_list=True, **kwargs):
+def _unwrap(_cache, weight=0, *args, is_list=True, **kwargs):
     """Register a decorator with it's specific cache
 
     This will add a new mapping in the given cache with the function name
@@ -31,10 +31,11 @@ def _unwrap(_cache, *args, is_list=True, **kwargs):
         name = opts.pop("name", func.__name__)
 
         if is_list:
+            func_with_weight = (weight, func)
             try:
-                _cache[name].append(func)
+                _cache[name].append(func_with_weight)
             except KeyError:
-                _cache[name] = [func]
+                _cache[name] = [func_with_weight]
         else:
             if name in _cache:
                 handler_cache_name = opts.pop("cache_name", "<unknown>")

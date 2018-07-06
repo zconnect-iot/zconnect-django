@@ -50,7 +50,9 @@ class Listener:
         Args:
             message (Zconnect message object): The incoming message
         """
-        handlers = self.message_handlers.get(message.category, [])
+        sorted_handlers = sorted(self.message_handlers.get(message.category, []),
+                                 key=lambda x: x[0], reverse=True)
+        handlers = [x[1] for x in sorted_handlers]
 
         if not handlers:
             logger.error("No handler for '%s' messages", message.category)

@@ -30,7 +30,9 @@ def get_action_handlers(name):
     """
     from .cache import _action_handlers
     logger.debug("Available action handlers: %s", _action_handlers)
-    return _action_handlers.get(name)
+    unsorted = _action_handlers.get(name)
+    sorted_handlers = sorted(unsorted, key=lambda x: x[0], reverse=True)
+    return [x[1] for x in sorted_handlers]
 
 
 def get_activity_notifier_handler(name):

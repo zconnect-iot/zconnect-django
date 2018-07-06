@@ -20,7 +20,7 @@ class TestListener:
             mocked = mock.Mock()
             message = Message("cat", {"a": "b"}, fakedevice)
             greenlet.client.message_handlers = {
-                "cat": [mocked]
+                "cat": [(0, mocked)]
             }
             greenlet.client._message_callback(message)
 
